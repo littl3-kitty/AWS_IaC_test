@@ -1,7 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
-# Update system
+# Get instance private IP
+PRIVATE_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
+
+# Update system using VPN server as proxy
+# Note: This assumes VPN server can act as NAT gateway
 apt-get update
 apt-get upgrade -y
 
@@ -21,10 +25,10 @@ cat > /var/www/html/index.html <<EOF
 </html>
 EOF
 
-# Configure nginx to listen only on VPN interface
+# Configure nginx to listen only on private IP
 cat > /etc/nginx/sites-available/default <<EOF
 server {
-    listen 10.0.2.10:80;
+    listen ${PRIVATE_IP}:80;
     server_name _;
     root /var/www/html;
     index index.html;
