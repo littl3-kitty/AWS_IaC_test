@@ -6,7 +6,7 @@ apt-get update
 apt-get upgrade -y
 
 # Install OpenVPN
-apt-get install -y openvpn easy-rsa
+apt-get install -y openvpn easy-rsa iptables-persistent
 
 # Setup PKI
 make-cadir /etc/openvpn/easy-rsa
@@ -63,6 +63,14 @@ EOF
 # Enable IP forwarding
 echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 sysctl -p
+
+# Configure NAT
+iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
+iptables -A FORWARD -i tun0 -o eth0 -j ACCEPT
+iptables -A FORWARD -i eth0 -o tun0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+# Save iptables rules
+netfilter-persistent save
 
 # Start OpenVPN
 systemctl enable openvpn@server
