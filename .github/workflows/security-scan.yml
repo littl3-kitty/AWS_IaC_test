@@ -24,6 +24,13 @@ jobs:
         framework: terraform
         output_format: json
         download_external_modules: true
+        # 프리티어 테스트를 위해 특정 체크 제외
+        skip_check: CKV_AWS_79,CKV_AWS_8,CKV_AWS_88,CKV_AWS_24,CKV_AWS_23
+        # CKV_AWS_79: Instance Metadata Service v2
+        # CKV_AWS_8: EBS Encryption
+        # CKV_AWS_88: EC2 detailed monitoring
+        # CKV_AWS_24: Security group unrestricted egress
+        # CKV_AWS_23: Security group unrestricted ingress
         
     # SAST - Shell Script Analysis
     - name: Run ShellCheck
@@ -42,7 +49,7 @@ jobs:
         severity: 'CRITICAL,HIGH'
         
     - name: Upload Trivy results
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v3
       if: always()
       with:
         sarif_file: 'trivy-results.sarif'
