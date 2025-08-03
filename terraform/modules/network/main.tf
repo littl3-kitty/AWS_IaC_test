@@ -87,10 +87,10 @@ data "aws_ami" "nat" {
 
 resource "aws_instance" "nat" {
   ami                    = data.aws_ami.nat.id
-  instance_type          = "t3.micro"  # 프리티어, 모든 리전 지원
+  instance_type          = "t3.micro"
   subnet_id              = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.nat.id]
-  source_dest_check      = false  # NAT Instance는 필수
+  source_dest_check      = false
 
   tags = {
     Name = "${var.env}-nat-instance"
@@ -151,14 +151,14 @@ resource "aws_security_group" "vpn" {
     from_port   = 1194
     to_port     = 1194
     protocol    = "udp"
-    cidr_blocks = ["${var.allowed_ip}/32"]
+    cidr_blocks = ["0.0.0.0/0"]  # 임시로 모든 IP 허용
   }
 
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["${var.allowed_ip}/32"]
+    cidr_blocks = ["0.0.0.0/0"]  # 임시로 모든 IP 허용
   }
 
   egress {
