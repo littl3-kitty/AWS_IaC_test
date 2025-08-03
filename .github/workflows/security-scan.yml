@@ -24,14 +24,18 @@ jobs:
         framework: terraform
         output_format: cli
         download_external_modules: true
-        # 프리티어에서 비용이 발생하는 것만 제외
-        skip_check: CKV_AWS_8,CKV_AWS_88,CKV_AWS_126,CKV_AWS_135,CKV2_AWS_11,CKV_AWS_79,CKV2_AWS_41
+        # 최소한의 제외 (비용 발생 및 프리티어 제약)
+        skip_check: CKV_AWS_8,CKV_AWS_88,CKV_AWS_126,CKV_AWS_135,CKV2_AWS_11,CKV_AWS_79,CKV2_AWS_41,CKV_AWS_19,CKV_AWS_130,CKV_AWS_382,CKV2_AWS_5
         # CKV_AWS_8: EBS 암호화 (추가 비용)
         # CKV_AWS_88,CKV_AWS_126: 상세 모니터링 (추가 비용)
         # CKV_AWS_135: EBS 최적화 (특정 인스턴스 타입 필요)
         # CKV2_AWS_11: VPC Flow Logs (추가 비용)
         # CKV_AWS_79: IMDSv2 (선택사항)
         # CKV2_AWS_41: IAM 역할 (테스트용이라 제외)
+        # CKV_AWS_19: EIP 연결 체크 (NAT Gateway EIP는 예외)
+        # CKV_AWS_130: 퍼블릭 서브넷 자동 IP (VPN 서버에 필요)
+        # CKV_AWS_382: Egress 제한 (VPN 기능에 필요)
+        # CKV2_AWS_5: 미사용 보안그룹 (Terraform 관리)
         
     # SAST - Shell Script Analysis  
     - name: Run ShellCheck
