@@ -38,4 +38,4 @@ jobs:
       
     - name: Terraform Apply
       working-directory: ./terraform/test
-      run: terraform apply -auto-approve -var="allowed_ip=${{ secrets.USER_PUBLIC_IP }}"
+      run: terraform apply -auto-approve -var="allowed_ip=${{ secrets.USER_PUBLIC_IP }}" -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
